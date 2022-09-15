@@ -10,9 +10,9 @@ class node :
     def __str__(self):
         return "attr: {0} visited : {1} prev : {2}".format(self.attr,self.visited,self.prev)
 
-Target = []
+Target = [[0,3],[9,4],[2,2],[2,7]]
 mapSize = 10
-targetNo = 1
+targetNo = 2
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
 #[[4, 8], [7, 4], [7, 9], [4, 4], [0, 6], [2, 7], [5, 6], [2, 4]]
 
@@ -51,11 +51,18 @@ def find_color(Map):
     color_list=sorted(color_list,key=lambda x: Map[x[0]][x[1]].attr)
     return color_list
 
+def resetVisited(Map):
+    for i in range(mapSize):
+        for j in range(mapSize):
+            if Map[i][j].attr == "-":
+                Map[i][j].visited=False
+
 def bidirect_bfs(Map):
     target_list = find_color(Map)
     di_r = [0,0,1,-1]
     di_c = [1,-1,0,0]
     for i in range(0,2*targetNo,2):
+        resetVisited(Map)
         q_st = []
         q_en = []
         q_st.append([target_list[i][0],target_list[i][1]])
@@ -88,7 +95,7 @@ def bidirect_bfs(Map):
                 for i in range (4):
                     nst_i = cur_st_i+di_r[i]
                     nst_j = cur_st_j+di_c[i]
-                    if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize):
+                    if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize or Map[nst_i][nst_j].attr != '-'):
                         continue
                     if(Map[nst_i][nst_j].visited):
                         if (Map[cur_st_i][cur_st_j].parent == Map[nst_i][nst_j].parent and Map[cur_st_i][cur_st_j].first != Map[nst_i][nst_j].first):
@@ -140,7 +147,7 @@ def bidirect_bfs(Map):
                 for i in range (4):
                     nst_i = cur_en_i+di_r[i]
                     nst_j = cur_en_j+di_c[i]
-                    if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize):
+                    if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize or Map[nst_i][nst_j].attr != '-'):
                         continue
                     if(Map[nst_i][nst_j].visited):
                         if (Map[cur_en_i][cur_en_j].parent == Map[nst_i][nst_j].parent and Map[cur_en_i][cur_en_j].first != Map[nst_i][nst_j].first):
@@ -180,7 +187,7 @@ def bidirect_bfs(Map):
                     q_en.append([nst_i,nst_j])
 
 
-gen_Target(Target)
+#gen_Target(Target)
 gen_Map(Map,Target)
 show_Map(Map)
 bidirect_bfs(Map)
