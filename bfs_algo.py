@@ -180,7 +180,3 @@ for i in range(10): #print result
     print()
 for i in range(pair_count):
     print("path "+chr(65+i)+ " : "+str(line_path[i]))
-'''for i in range(10):
-    for j in range(10):
-        print(Map[i][j].visited,end=' ')
-    print()'''
