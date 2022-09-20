@@ -1,23 +1,23 @@
+
 from itertools import permutations
-from math import factorial
-from random import random,randrange
-from re import L
+from random import randrange
 
 class node :
     def __init__(self,attr,first='',parent='',visited = False,prev=[-1,-1]):
         self.attr = attr
         self.visited = visited
         self.prev = prev
-        self.first = first
-        self.parent = parent
+        self.first = first #start from end point or start point
+        self.parent = parent #which Char this node start from
     def __str__(self):
         return "attr: {0} visited : {1} prev : {2}".format(self.attr,self.visited,self.prev)
 
-Target = []
+Target = [[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
 maximumRetry = 0
+line_path = []
 #[[4, 8], [7, 4], [7, 9], [4, 4], [0, 6], [2, 7], [5, 6], [2, 4]]
 #[[[7, 3], [7, 6]], [[0, 3], [6, 0]], [[0, 5], [6, 7]], [[0, 2], [5, 5]]]
 def gen_Target(target):
@@ -41,7 +41,7 @@ def gen_Target(target):
     print(target)
 
 def gen_Map(Map,target):
-    print(target)
+    #print(target)
 
     target_Marker = 'A'
     for i in range(0,2*targetNo,2):
@@ -86,7 +86,7 @@ def resetVisited(Map):
             if Map[i][j].attr == "-":
                 Map[i][j].visited=False
 
-def bidirect_bfs(Map,finished,retry):
+def bidirect_bfs(Map,finished,retry,linePath):
     #target_list = find_color(Map,retry)
     target_list = Target[retry]
     di_r = [0,0,-1,1]
@@ -95,6 +95,8 @@ def bidirect_bfs(Map,finished,retry):
         resetVisited(Map)
         q_st = []
         q_en = []
+        pair_path_st=[]
+        pair_path_en=[]
         q_st.append([target_list[i][0],target_list[i][1]])
         q_en.append([target_list[i+1][0],target_list[i+1][1]])
         st_point_i = q_st[0][0]
@@ -139,19 +141,11 @@ def bidirect_bfs(Map,finished,retry):
                             if([nst_i,nst_j] == [en_point_i,en_point_j]):
                                 break;
                             Map[nst_i][nst_j].attr = str.lower(Map[nst_i][nst_j].parent)
-                            previ=cur_st_i
-                            prevj=cur_st_j
-                            while([previ,prevj] != [st_point_i,st_point_j]):
-                                if([previ,prevj] == [-1,-1] or [previ,prevj] == [en_point_i,en_point_j]):
-                                    break;
-                                Map[previ][prevj].attr =  str.lower(Map[nst_i][nst_j].parent)
-                                previ_temp=Map[previ][prevj].prev[0]
-                                prevj_temp=Map[previ][prevj].prev[1]
-                                previ=previ_temp
-                                prevj=prevj_temp
+                            pair_path_st.append([nst_i,nst_j])
                             previ = Map[nst_i][nst_j].prev[0]
                             prevj = Map[nst_i][nst_j].prev[1]
                             while([previ,prevj] != [en_point_i,en_point_j]):
+                                pair_path_en.append([previ,prevj])
                                 if([previ,prevj] == [-1,-1] or [previ,prevj] == [en_point_i,en_point_j]):
                                     break;
                                 Map[previ][prevj].attr = str.lower(Map[nst_i][nst_j].parent)
@@ -159,6 +153,23 @@ def bidirect_bfs(Map,finished,retry):
                                 prevj_temp=Map[previ][prevj].prev[1]
                                 previ=previ_temp
                                 prevj=prevj_temp
+                                #print('path en:',pair_path_en)
+                            previ=cur_st_i
+                            prevj=cur_st_j
+                            while([previ,prevj] != [st_point_i,st_point_j]):
+                                pair_path_st.append([previ,prevj])
+                                if([previ,prevj] == [-1,-1] or [previ,prevj] == [en_point_i,en_point_j]):
+                                    break;
+                                Map[previ][prevj].attr =  str.lower(Map[nst_i][nst_j].parent)
+                                previ_temp=Map[previ][prevj].prev[0]
+                                prevj_temp=Map[previ][prevj].prev[1]
+                                previ=previ_temp
+                                prevj=prevj_temp
+                                #print('path st:',pair_path_st)
+                            pair_path_st.append([st_point_i,st_point_j])
+                            pair_path_en.append([en_point_i,en_point_j])
+                            pair_path_st.reverse()
+                            linePath.append(pair_path_st+pair_path_en)
                             break
                         continue
                     Map[nst_i][nst_j].prev = [cur_st_i,cur_st_j] 
@@ -192,9 +203,11 @@ def bidirect_bfs(Map,finished,retry):
                             if([nst_i,nst_j] == [st_point_i,st_point_j]):
                                 break;
                             Map[nst_i][nst_j].attr = str.lower(Map[nst_i][nst_j].parent)
+                            pair_path_st.append([nst_i,nst_j])
                             previ = Map[nst_i][nst_j].prev[0]
                             prevj = Map[nst_i][nst_j].prev[1]
                             while([previ,prevj] != [st_point_i,st_point_j]):
+                                pair_path_st.append([previ,prevj])
                                 if([previ,prevj] == [-1,-1] or [previ,prevj] == [st_point_i,st_point_j]):
                                     break;
                                 Map[previ][prevj].attr = str.lower(Map[nst_i][nst_j].parent)
@@ -202,9 +215,11 @@ def bidirect_bfs(Map,finished,retry):
                                 prevj_temp=Map[previ][prevj].prev[1]
                                 previ=previ_temp
                                 prevj=prevj_temp
+                                #print('path st:',pair_path_st)
                             previ=cur_en_i
                             prevj=cur_en_j
                             while([previ,prevj] != [en_point_i,en_point_j]):
+                                pair_path_en.append([previ,prevj])
                                 if([previ,prevj] == [-1,-1] or [previ,prevj] == [st_point_i,st_point_j]):
                                     break;
                                 Map[previ][prevj].attr = str.lower(Map[nst_i][nst_j].parent)
@@ -212,6 +227,11 @@ def bidirect_bfs(Map,finished,retry):
                                 prevj_temp=Map[previ][prevj].prev[1]
                                 previ=previ_temp
                                 prevj=prevj_temp
+                                #print('path en:',pair_path_en)
+                            pair_path_st.append([st_point_i,st_point_j])
+                            pair_path_en.append([en_point_i,en_point_j])
+                            pair_path_st.reverse()
+                            linePath.append(pair_path_st+pair_path_en)
                             break
                         continue
                     Map[nst_i][nst_j].prev = [cur_en_i,cur_en_j] 
@@ -220,12 +240,12 @@ def bidirect_bfs(Map,finished,retry):
     print(finished)
     if(finished!=targetNo):
         reset_Map(Map)
-        print(target_list)
+        #print(target_list)
         finished=0
         return False
     return True
 
-gen_Target(Target)
+#gen_Target(Target)
 Target=list(permutations(Target))
 for i in range(0,len(Target)):
     Target[i]=list(Target[i])
@@ -236,12 +256,14 @@ for i in range(0,len(Target)):
         temp_single_target.append(en)
     Target[i]=temp_single_target.copy()
 maximumRetry=len(Target)-1
-print((maximumRetry))
+print("Maximum Retry :",maximumRetry)
 gen_Map(Map,Target[0])
 show_Map(Map)
 current_try = 0
-while(not bidirect_bfs(Map,0,current_try) and current_try!=maximumRetry):
+while(not bidirect_bfs(Map,0,current_try,line_path) and current_try!=maximumRetry):
     current_try+=1
     print("Not Possible Retrying Try #{0}".format(current_try+1))
 print('######################')
 show_Map(Map)
+for i in range(len(line_path)):
+    print('Path for',chr(ord('A')+i),':',line_path[i])
