@@ -152,7 +152,7 @@ for j in range(len(perm)): #try bfs from permutation
                 line_path.append(path_each)
         break #end when all pair connected
 
-print(str(line_path))
+
 '''for j in range(pair_count): #bfs for all pair
     for i in range(pair_count): #bfs for each pair
         start = Target.pop(0)
@@ -178,8 +178,5 @@ for i in range(10): #print result
     for j in range(10):
         print(Map[i][j].attribute,end=' ')
     print()
-'''for i in range(10):
-    for j in range(10):
-        print(Map[i][j].visited,end=' ')
-    print()'''
-    ## array หน้าตาแบบไหนนะ จะเอาจุดเส้นยังไง
+for i in range(pair_count):
+    print("path "+chr(65+i)+ " : "+str(line_path[i]))
