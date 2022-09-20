@@ -11,7 +11,7 @@ class node :
     def __str__(self):
         return "attr: {0} visited : {1} prev : {2}".format(self.attr,self.visited,self.prev)
 
-Target = []
+Target = [[7, 3], [7, 6], [0, 3], [6, 0], [0, 5], [6, 7], [0, 2], [5, 5]]
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
@@ -213,7 +213,7 @@ def bidirect_bfs(Map,finished,retry):
         return False
     return True
 
-gen_Target(Target)
+#gen_Target(Target)
 gen_Map(Map,Target)
 show_Map(Map)
 current_try = 0

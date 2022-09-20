@@ -67,8 +67,9 @@ for i in range(10):
     for j in range(10):
         temp.append(node("-"))
     Map.append(temp)
-x= [0,7,2,9,4,1,5,1]
-y= [1,9,1,5,4,5,2,0]
+y= [7,7,0,6,0,6,0,5]
+x= [3,6,3,0,5,7,2,5]
+#[7, 3], [7, 6], [0, 3], [6, 0], [0, 5], [6, 7], [0, 2], [5, 5]
 for i in range(len(x)):
     position = [y[i],x[i]]
     Map[y[i]][x[i]].attr = 'x'
