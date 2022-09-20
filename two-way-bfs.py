@@ -1,5 +1,7 @@
+from itertools import permutations
 from math import factorial
 from random import random,randrange
+from re import L
 
 class node :
     def __init__(self,attr,first='',parent='',visited = False,prev=[-1,-1]):
@@ -15,11 +17,12 @@ Target = []
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
-maximumRetry = factorial(targetNo)
+maximumRetry = 0
 #[[4, 8], [7, 4], [7, 9], [4, 4], [0, 6], [2, 7], [5, 6], [2, 4]]
-
+#[[[7, 3], [7, 6]], [[0, 3], [6, 0]], [[0, 5], [6, 7]], [[0, 2], [5, 5]]]
 def gen_Target(target):
     target_mark=[]
+    target_single = []
     while len(target_mark)< 2*targetNo:
         temp_point = []
         x=randrange(0,mapSize)
@@ -27,11 +30,19 @@ def gen_Target(target):
         temp_point.append(x)
         temp_point.append(y)
         if (not temp_point in target_mark):
-            target.append(temp_point)
+            target_single.append(temp_point)
             target_mark.append(temp_point)
+    temp_pair = []
+    for i in range(0,len(target_single)):
+        temp_pair.append(target_single[i])
+        if(i%2==1):
+            target.append(temp_pair)
+            temp_pair=[]
+    print(target)
 
 def gen_Map(Map,target):
     print(target)
+
     target_Marker = 'A'
     for i in range(0,2*targetNo,2):
         Map[target[i][0]][target[i][1]] = node(target_Marker)
@@ -76,9 +87,10 @@ def resetVisited(Map):
                 Map[i][j].visited=False
 
 def bidirect_bfs(Map,finished,retry):
-    target_list = find_color(Map,retry)
-    di_r = [0,-1,0,1]
-    di_c = [1,0,-1,0]
+    #target_list = find_color(Map,retry)
+    target_list = Target[retry]
+    di_r = [0,0,-1,1]
+    di_c = [1,-1,0,0]
     for i in range(0,2*targetNo,2):
         resetVisited(Map)
         q_st = []
@@ -106,7 +118,7 @@ def bidirect_bfs(Map,finished,retry):
                 q_st.pop(0)
                 #print('START Q FRONT:',cur_st_i,cur_st_j)
                 if(not(cur_st_i == st_point_i and cur_st_j  == st_point_j)):
-                    #Map[cur_st_i][cur_st_j].attr = Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].attr
+                    #Map[cur_st_i][cur_st_j].attr = str.lower(Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].attr)
                     Map[cur_st_i][cur_st_j].parent = Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].parent
                     Map[cur_st_i][cur_st_j].first = Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].first
                 
@@ -160,7 +172,7 @@ def bidirect_bfs(Map,finished,retry):
                 q_en.pop(0)
                 #print('END Q FRONT:',cur_en_i,cur_en_j)
                 if(not (cur_en_i == en_point_i and cur_en_j  == en_point_j)):
-                    #Map[cur_en_i][cur_en_j].attr = Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].attr
+                    #Map[cur_en_i][cur_en_j].attr = str.lower(Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].attr)
                     Map[cur_en_i][cur_en_j].parent = Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].parent
                     Map[cur_en_i][cur_en_j].first = Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].first
                 for j in range (4):
@@ -214,11 +226,22 @@ def bidirect_bfs(Map,finished,retry):
     return True
 
 gen_Target(Target)
-gen_Map(Map,Target)
+Target=list(permutations(Target))
+for i in range(0,len(Target)):
+    Target[i]=list(Target[i])
+    temp_single_target = []
+    for j in range(0,len(Target[i])):
+        st,en = Target[i][j]
+        temp_single_target.append(st)
+        temp_single_target.append(en)
+    Target[i]=temp_single_target.copy()
+maximumRetry=len(Target)-1
+print((maximumRetry))
+gen_Map(Map,Target[0])
 show_Map(Map)
 current_try = 0
 while(not bidirect_bfs(Map,0,current_try) and current_try!=maximumRetry):
     current_try+=1
-    print("Not Possible Retrying Try #{0}".format(current_try))
+    print("Not Possible Retrying Try #{0}".format(current_try+1))
 print('######################')
 show_Map(Map)
