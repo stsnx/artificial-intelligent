@@ -1,9 +1,12 @@
 from random import random, randrange
-from itertools import permutations 
+from itertools import permutations
+from re import search 
+import time
+import os, psutil
 Target = []
 Map =[]
 line_pattern = "|\+!%^"
-
+search_count = 0
 class node: #node structure of each point in map
     def __init__(self,attribute,visited=False,previous=[-1,-1],first = '',parent='') :
         self.attribute = attribute
@@ -12,6 +15,7 @@ class node: #node structure of each point in map
         self.first =''
         self.parent = ''
 def bfs(start,finish,way_pattern): #normal breath first search
+    global search_count
     executeCount=0
     bfs_queue = []
     bfs_queue.append(start)
@@ -20,6 +24,7 @@ def bfs(start,finish,way_pattern): #normal breath first search
     Map[start[0]][start[1]].prev=[-1,-1]
     while len(bfs_queue)>0:
         executeCount+=1
+        
         temp = bfs_queue.pop(0) #temp is first position in queue for search in bfs
         Map[temp[0]][temp[1]].visited=True
         #if wp==2:
@@ -66,6 +71,7 @@ def bfs(start,finish,way_pattern): #normal breath first search
             #print("end" + str(Map[temp[1]][temp[0]].prev))
             Map[start[0]][start[1]].visited = True
             Map[finish[0]][finish[1]].visited = True
+            search_count+=executeCount
             #print("execcount = "+str(executeCount))
             return 1
     return 0
@@ -88,7 +94,10 @@ def reversePosition(line_path):
         temp = i[0]
         i[0] = i[1]
         i[1] = temp
-
+def process_memory():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return mem_info.rss
 for i in range(10): #set first map
     temp = []
     for j in range(10):
@@ -100,11 +109,12 @@ y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit
 pair_count = len(x)//2
 point_count = len(x)
 Map_Marker = 'A'
-for i in range(point_count): #mark "x" in map where point exist 
+for i in range(point_count): #mark "ABCDE" in map where point exist 
     position = [y[i],x[i]]
     Map[y[i]][x[i]].attribute = chr(ord(Map_Marker)+(i//2))
     Target.append(position)
-
+start_time = int(round(time.time()*1000))
+start_mem = process_memory()
 #print(Target)
 way_pattern = 0 #make different line for different pair
 success=0 #count number of pair connected successfully
@@ -151,8 +161,8 @@ for j in range(len(perm)): #try bfs from permutation
                 #reversePosition(path_each)
                 line_path.append(path_each)
         break #end when all pair connected
-
-
+end_time = int(round(time.time()*1000))
+end_mem = process_memory()
 '''for j in range(pair_count): #bfs for all pair
     for i in range(pair_count): #bfs for each pair
         start = Target.pop(0)
@@ -180,3 +190,6 @@ for i in range(10): #print result
     print()
 for i in range(pair_count):
     print("path "+chr(65+i)+ " : "+str(line_path[i]))
+print("Searched {0} time".format(search_count))
+print("Searched time used {} millisecond".format(end_time-start_time))
+print("Searched memory used {:,} byte".format(end_mem-start_mem))
