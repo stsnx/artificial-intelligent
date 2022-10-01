@@ -1,7 +1,8 @@
 
 from itertools import permutations
 from random import randrange
-
+import time
+import os, psutil
 class node :
     def __init__(self,attr,first='',parent='',visited = False,prev=[-1,-1]):
         self.attr = attr
@@ -11,7 +12,10 @@ class node :
         self.parent = parent #which Char this node start from
     def __str__(self):
         return "attr: {0} visited : {1} prev : {2}".format(self.attr,self.visited,self.prev)
-
+def process_memory():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    return mem_info.rss
 Target = [[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
 mapSize = 10
 targetNo = 4
@@ -246,6 +250,8 @@ def bidirect_bfs(Map,finished,retry,linePath):
     return True
 
 #gen_Target(Target)
+start_time = int(round(time.time()*1000))
+start_mem = process_memory()
 Target=list(permutations(Target))
 for i in range(0,len(Target)):
     Target[i]=list(Target[i])
@@ -264,6 +270,10 @@ while(not bidirect_bfs(Map,0,current_try,line_path) and current_try!=maximumRetr
     current_try+=1
     print("Not Possible Retrying Try #{0}".format(current_try+1))
 print('######################')
+end_time = int(round(time.time()*1000))
+end_mem = process_memory()
 show_Map(Map)
 for i in range(len(line_path)):
     print('Path for',chr(ord('A')+i),':',line_path[i])
+print("Searched time used {} millisecond".format(end_time-start_time))
+print("Searched memory used {:,} byte".format(end_mem-start_mem))
