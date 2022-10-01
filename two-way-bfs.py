@@ -12,18 +12,21 @@ class node :
         self.parent = parent #which Char this node start from
     def __str__(self):
         return "attr: {0} visited : {1} prev : {2}".format(self.attr,self.visited,self.prev)
+
 def process_memory():
     process = psutil.Process(os.getpid())
     mem_info = process.memory_info()
     return mem_info.rss
+
 Target = [[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
 maximumRetry = 0
 line_path = []
-#[[4, 8], [7, 4], [7, 9], [4, 4], [0, 6], [2, 7], [5, 6], [2, 4]]
 #[[[7, 3], [7, 6]], [[0, 3], [6, 0]], [[0, 5], [6, 7]], [[0, 2], [5, 5]]]
+#[[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
+
 def gen_Target(target):
     target_mark=[]
     target_single = []
@@ -116,7 +119,6 @@ def bidirect_bfs(Map,finished,retry,linePath):
         while(len(q_st) > 0 or len(q_en) > 0):
             #print('bfs')
             #show_Map(Map)
-
             #start point
             if(len(q_st)>0):
                 cur_st_i = q_st[0][0]
@@ -268,6 +270,7 @@ show_Map(Map)
 current_try = 0
 while(not bidirect_bfs(Map,0,current_try,line_path) and current_try!=maximumRetry):
     current_try+=1
+    line_path=[]
     print("Not Possible Retrying Try #{0}".format(current_try+1))
 print('######################')
 end_time = int(round(time.time()*1000))
