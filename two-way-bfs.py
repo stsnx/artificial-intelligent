@@ -3,6 +3,7 @@ from itertools import permutations
 from random import randrange
 import time
 import os, psutil
+import tracemalloc
 class node :
     def __init__(self,attr,first='',parent='',visited = False,prev=[-1,-1]):
         self.attr = attr
@@ -251,7 +252,7 @@ def bidirect_bfs(Map,finished,retry,linePath):
 
 #gen_Target(Target)
 start_time = int(round(time.time()*1000))
-start_mem = process_memory()
+tracemalloc.start()
 Target=list(permutations(Target))
 for i in range(0,len(Target)):
     Target[i]=list(Target[i])
@@ -276,4 +277,6 @@ show_Map(Map)
 for i in range(len(line_path)):
     print('Path for',chr(ord('A')+i),':',line_path[i])
 print("Searched time used {} millisecond".format(end_time-start_time))
-print("Searched memory used {:,} byte".format(end_mem-start_mem))
+memUsed  = list(tracemalloc .get_traced_memory())
+print("Searched memory current used {:,} byte, peak memory usage {:,} byte".format(memUsed[0],memUsed[1]))
+tracemalloc.stop()
