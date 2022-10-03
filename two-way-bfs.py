@@ -19,7 +19,7 @@ def process_memory():
     mem_info = process.memory_info()
     return mem_info.rss
 
-Target = [[[9,2],[3,2]] , [[4,5],[0,0]] , [[3,1],[4,2]] , [[5,2],[8,2]]]
+Target = [[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]

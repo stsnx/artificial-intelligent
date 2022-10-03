@@ -56,7 +56,7 @@ def bfs(start,finish,way_pattern): #normal breath first search
                 Map[temp[0]+1][temp[1]].prev = [temp[0],temp[1]] 
                 if not Map[temp[0]+1][temp[1]].attribute.isalpha():
                     bfs_queue.append([temp[0]+1,temp[1]])
-                elif temp[0]==finish[0] and temp[1]+1==finish[1]:
+                elif temp[0]+1==finish[0] and temp[1]==finish[1]:
                     bfs_queue.append([temp[0]+1,temp[1]])
         
         
