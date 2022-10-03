@@ -3,6 +3,7 @@ from itertools import permutations
 from re import search 
 import time
 import os, psutil
+import tracemalloc
 Target = []
 Map =[]
 line_pattern = "|\+!%^"
@@ -103,6 +104,7 @@ for i in range(10): #set first map
     for j in range(10):
         temp.append(node("-"))
     Map.append(temp)
+    
 x= [3,6,3,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
 y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
 
@@ -114,7 +116,7 @@ for i in range(point_count): #mark "ABCDE" in map where point exist
     Map[y[i]][x[i]].attribute = chr(ord(Map_Marker)+(i//2))
     Target.append(position)
 start_time = int(round(time.time()*1000))
-start_mem = process_memory()
+tracemalloc.start()
 #print(Target)
 way_pattern = 0 #make different line for different pair
 success=0 #count number of pair connected successfully
@@ -192,4 +194,7 @@ for i in range(pair_count):
     print("path "+chr(65+i)+ " : "+str(line_path[i]))
 print("Searched {0} time".format(search_count))
 print("Searched time used {} millisecond".format(end_time-start_time))
-print("Searched memory used {:,} byte".format(end_mem-start_mem))
+memUsed  = list(tracemalloc .get_traced_memory())
+
+print("Searched memory current used {:,} byte, peak memory usage {:,} byte".format(memUsed[0],memUsed[1]))
+tracemalloc.stop()
