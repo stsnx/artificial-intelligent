@@ -19,7 +19,7 @@ def process_memory():
     mem_info = process.memory_info()
     return mem_info.rss
 
-Target = [[[1, 2], [0, 9]], [[3, 7], [9, 1]], [[3, 9], [1, 3]], [[7, 1], [9, 0]]]
+Target = [[[9,2],[3,2]] , [[4,5],[0,0]] , [[3,1],[4,2]] , [[5,2],[8,2]]]
 mapSize = 10
 targetNo = 4
 Map=[[node('-') for i in range(mapSize)]for i in range(mapSize)]
@@ -121,15 +121,13 @@ def bidirect_bfs(Map,finished,retry,linePath):
             #print('bfs')
             #show_Map(Map)
             #start point
+            #print(len(q_st))
             if(len(q_st)>0):
+                #print('Start Queue:',q_st)
                 cur_st_i = q_st[0][0]
                 cur_st_j = q_st[0][1]
                 q_st.pop(0)
                 #print('START Q FRONT:',cur_st_i,cur_st_j)
-                if(not(cur_st_i == st_point_i and cur_st_j  == st_point_j)):
-                    #Map[cur_st_i][cur_st_j].attr = str.lower(Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].attr)
-                    Map[cur_st_i][cur_st_j].parent = Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].parent
-                    Map[cur_st_i][cur_st_j].first = Map[Map[cur_st_i][cur_st_j].prev[0]][Map[cur_st_i][cur_st_j].prev[1]].first
                 
                 for j in range (4):
                     nst_i = cur_st_i+di_r[j]
@@ -137,7 +135,7 @@ def bidirect_bfs(Map,finished,retry,linePath):
                     if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize or Map[nst_i][nst_j].attr != '-'):
                         continue
                     if(Map[nst_i][nst_j].visited):
-                        if (Map[cur_st_i][cur_st_j].parent == Map[nst_i][nst_j].parent and Map[cur_st_i][cur_st_j].first != Map[nst_i][nst_j].first):
+                        if ((Map[cur_st_i][cur_st_j].parent == Map[nst_i][nst_j].parent and Map[cur_st_i][cur_st_j].first != Map[nst_i][nst_j].first) or (nst_i==en_point_i and nst_j==en_point_j)):
                             print('found')
                             print('at :',nst_i,nst_j)
                             finished+=1
@@ -178,28 +176,28 @@ def bidirect_bfs(Map,finished,retry,linePath):
                             pair_path_st.reverse()
                             linePath.append(pair_path_st+pair_path_en)
                             break
-                        continue
+                        else:
+                            continue
                     Map[nst_i][nst_j].prev = [cur_st_i,cur_st_j] 
                     Map[nst_i][nst_j].visited = True
+                    Map[nst_i][nst_j].parent = Map[cur_st_i][cur_st_j].parent
+                    Map[nst_i][nst_j].first = Map[cur_st_i][cur_st_j].first
                     q_st.append([nst_i,nst_j])
-
+            #print(len(q_en))
             #end point
             if(len(q_en)>0):
+                #print('End Queue: ',q_en)
                 cur_en_i = q_en[0][0]
                 cur_en_j = q_en[0][1]
                 q_en.pop(0)
                 #print('END Q FRONT:',cur_en_i,cur_en_j)
-                if(not (cur_en_i == en_point_i and cur_en_j  == en_point_j)):
-                    #Map[cur_en_i][cur_en_j].attr = str.lower(Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].attr)
-                    Map[cur_en_i][cur_en_j].parent = Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].parent
-                    Map[cur_en_i][cur_en_j].first = Map[Map[cur_en_i][cur_en_j].prev[0]][Map[cur_en_i][cur_en_j].prev[1]].first
                 for j in range (4):
                     nst_i = cur_en_i+di_r[j]
                     nst_j = cur_en_j+di_c[j]
                     if(nst_i < 0 or nst_i >= mapSize or nst_j < 0 or nst_j >=mapSize or Map[nst_i][nst_j].attr != '-'):
                         continue
                     if(Map[nst_i][nst_j].visited):
-                        if (Map[cur_en_i][cur_en_j].parent == Map[nst_i][nst_j].parent and Map[cur_en_i][cur_en_j].first != Map[nst_i][nst_j].first):
+                        if (Map[cur_en_i][cur_en_j].parent == Map[nst_i][nst_j].parent and Map[cur_en_i][cur_en_j].first != Map[nst_i][nst_j].first or (nst_i==st_point_i and nst_j==st_point_j)):
                             print('found')
                             print('at :',nst_i,nst_j)
                             finished+=1
@@ -240,9 +238,12 @@ def bidirect_bfs(Map,finished,retry,linePath):
                             pair_path_st.reverse()
                             linePath.append(pair_path_st+pair_path_en)
                             break
-                        continue
+                        else:
+                            continue
                     Map[nst_i][nst_j].prev = [cur_en_i,cur_en_j] 
                     Map[nst_i][nst_j].visited = True
+                    Map[nst_i][nst_j].parent = Map[cur_en_i][cur_en_j].parent
+                    Map[nst_i][nst_j].first = Map[cur_en_i][cur_en_j].first
                     q_en.append([nst_i,nst_j])
     print(finished)
     if(finished!=targetNo):
@@ -264,11 +265,12 @@ for i in range(0,len(Target)):
         temp_single_target.append(st)
         temp_single_target.append(en)
     Target[i]=temp_single_target.copy()
-maximumRetry=len(Target)-1
+#maximumRetry=len(Target)-1
+maximumRetry=14
 print("Maximum Retry :",maximumRetry)
 gen_Map(Map,Target[0])
 show_Map(Map)
-current_try = 0
+current_try = 13
 while(not bidirect_bfs(Map,0,current_try,line_path) and current_try!=maximumRetry):
     current_try+=1
     line_path=[]
@@ -278,7 +280,8 @@ end_time = int(round(time.time()*1000))
 end_mem = process_memory()
 show_Map(Map)
 for i in range(len(line_path)):
-    print('Path for',chr(ord('A')+i),':',line_path[i])
+    char = Map[line_path[i][0][0]][line_path[i][0][1]].attr
+    print('Path for',char,':',line_path[i])
 print("Searched time used {} millisecond".format(end_time-start_time))
 memUsed  = list(tracemalloc .get_traced_memory())
 print("Searched memory current used {:,} byte, peak memory usage {:,} byte".format(memUsed[0],memUsed[1]))
