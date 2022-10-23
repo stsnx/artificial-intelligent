@@ -40,18 +40,21 @@ def findnodepoint(pair,currentposition):
     temp_position = currentposition
     print(str(temp_position))
     if pair[1][1]>=currentposition[1]: #right
-        print("r")
         temp_position = currentposition.copy()
-        print("current"+str(currentposition))
+        print("currentr"+str(currentposition))
         found = False
         for i in range(currentposition[1]+1,pair[1][1]):
-            print('rr')
-            if Map[temp_position[0]][temp_position[1]+1].visited==True:
-                Map[temp_position[0]][temp_position[1]+1].attribute='O'
-                found==True
-                point_selection.append([temp_position[0],temp_position[1]+1])
+            if Map[temp_position[0]][temp_position[1]+1].visited==True :
+                if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
+                    Map[temp_position[0]][temp_position[1]].attribute='O'
+                    found=True
+                    print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
+                    print('append1')
+                    point_selection.append([temp_position[0],temp_position[1]])
+                if Map[temp_position[0]][temp_position[1]].attribute.isalpha() and Map[temp_position[0]][temp_position[1]].attribute==Map[pair[1][0]][pair[1][1]].attribute:
+                    found = True
             temp_position[1]+=1
-        
+        print("found?  = " + str(found))
         if not found:
             temp_position[1]+=1
             if temp_position==pair[1]:
@@ -82,32 +85,37 @@ def findnodepoint(pair,currentposition):
                                 Map[i][finalposition[1]].visited = True
                         else :
                             for i in range (postfinalposition[0]+1,finalposition[0]):
+                                print(str("chevk")+str(i) + str(line_pattern[pattern_position]))
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                     finalposition = postfinalposition
                 return True
             else:
+                print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
                 if(Map[temp_position[0]][temp_position[1]].visited==False):
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     Map[temp_position[0]][temp_position[1]].prev = currentposition
                     Map[temp_position[0]][temp_position[1]].distance= temp_position[1] - currentposition[1]
+                    print('append2')
                     point_selection.append(temp_position)
                    
-
-
     if pair[1][1]<currentposition[1]: #left
-        print("l")
         temp_position = currentposition.copy()
-        print("current"+str(currentposition))
+        print("currentl"+str(currentposition))
         found = False
         for i in range(currentposition[1]-1,pair[1][1],-1):
-            print('ll')
-            if Map[temp_position[0]][temp_position[1]-1].visited==True:
-                Map[temp_position[0]][temp_position[1]-1].attribute='O'
-                found==True
-                point_selection.append([temp_position[0],temp_position[1]-1])
+            print(i)
+            if Map[temp_position[0]][temp_position[1]-1].visited==True :
+                if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
+                    Map[temp_position[0]][temp_position[1]].attribute='O'
+                    found=True
+                    print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
+                    print('append1')
+                    point_selection.append([temp_position[0],temp_position[1]])
+                if Map[temp_position[0]][temp_position[1]].attribute.isalpha() and Map[temp_position[0]][temp_position[1]].attribute==Map[pair[1][0]][pair[1][1]].attribute:
+                    found = True
             temp_position[1]-=1
-        
+        print("found?  = " + str(found))
         if not found:
             temp_position[1]-=1
             if temp_position==pair[1]:
@@ -143,23 +151,25 @@ def findnodepoint(pair,currentposition):
                     finalposition = postfinalposition
                 return True
             else:
+                print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
                 if(Map[temp_position[0]][temp_position[1]].visited==False):
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     Map[temp_position[0]][temp_position[1]].prev = currentposition
                     Map[temp_position[0]][temp_position[1]].distance= temp_position[1] - currentposition[1]
+                    print('append2')
                     point_selection.append(temp_position)
                     
     if pair[1][0]>=currentposition[0]: #down
-        print("d")
         temp_position = currentposition.copy()
-        print("current"+str(currentposition))
+        print("currentd"+str(currentposition))
         found = False
         for i in range(currentposition[0]+1,pair[1][0]):
-            print('dd')
             if Map[temp_position[0]+1][temp_position[1]].visited==True:
-                Map[temp_position[0]+1][temp_position[1]].attribute='O'
-                found==True
-                point_selection.append([temp_position[0]+1,temp_position[1]])
+                Map[temp_position[0]][temp_position[1]].attribute='O'
+                found=True
+                print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
+                print('append1')
+                point_selection.append([temp_position[0],temp_position[1]])
             temp_position[0]+=1
         
         if not found:
@@ -197,32 +207,35 @@ def findnodepoint(pair,currentposition):
                     finalposition = postfinalposition
                 return True
             else:
+                print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
                 if(Map[temp_position[0]][temp_position[1]].visited==False):
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     Map[temp_position[0]][temp_position[1]].prev = currentposition
                     Map[temp_position[0]][temp_position[1]].distance= temp_position[0] - currentposition[0]
+                    print('append2')
                     point_selection.append(temp_position)
                     
     if pair[1][0]<currentposition[0]: #up
-        print("u")
         temp_position = currentposition.copy()
-        print("current"+str(currentposition))
+        print("currentu"+str(currentposition))
         found = False
         for i in range(currentposition[0]-1,pair[1][0],-1):
             print("b"+str(temp_position))
-            print('uu')
             if Map[temp_position[0]-1][temp_position[1]].visited==True:
-                print("drawO")
-                Map[temp_position[0]-1][temp_position[1]].attribute='O'
-                found==True
-                point_selection.append([temp_position[0]-1,temp_position[1]])
+                if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
+                    Map[temp_position[0]][temp_position[1]].attribute='O'
+                    found=True
+                    print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
+                    print('append1')
+                    point_selection.append([temp_position[0],temp_position[1]])
+                if Map[temp_position[0]][temp_position[1]].attribute.isalpha() and Map[temp_position[0]][temp_position[1]].attribute==Map[pair[1][0]][pair[1][1]].attribute:
+                    found = True
             temp_position[0]-=1
             print("a"+str(temp_position))
         if not found: 
             temp_position[0]-=1
             if temp_position==pair[1]:
                 Map[temp_position[0]][temp_position[1]].prev = currentposition
-                print("foundu")
                 finalposition = temp_position.copy()
                 print("final"+ str(finalposition))
                 while(finalposition!=[-1,-1]):
@@ -253,16 +266,27 @@ def findnodepoint(pair,currentposition):
                     finalposition = postfinalposition
                 return True
             else:
+                print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
                 if(Map[temp_position[0]][temp_position[1]].visited==False):
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     Map[temp_position[0]][temp_position[1]].prev = currentposition
                     Map[temp_position[0]][temp_position[1]].distance= temp_position[0] - currentposition[0]
+                    print('append2')
                     point_selection.append(temp_position)
                     
     #make decition before
     print(str(Map[pair[1][0]][pair[1][1]]))
     return False
+def resetmarkpoint(Map):
+    for i in range(10):
+        for j in range(10):
+            if Map[i][j].attribute=='O':
+                Map[i][j].attribute = "-"
+                Map[i][j].prev = []
+                Map[i][j].visited = False
     
+
+
 '''print(str(quick_sum_horizontal))
             if quick_sum_horizontal[pair[1][1]]-quick_sum_horizontal[pair[0][1]]<=1:
                 if currentposition == pair[1]:
@@ -273,8 +297,8 @@ def findnodepoint(pair,currentposition):
 
 #x= [6,3,3,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
 #y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
-x=[3,8]
-y=[7,2]
+x=[6,3,3,0,5,7,2,5]
+y=[7,7,0,6,0,6,0,5]
 for i in range(10): #set first map
     temp = []
     for j in range(10):
@@ -293,8 +317,12 @@ for i in range(point_count): #mark "x" in map where point exist
         pair_temp=[]
 print(str(pair_set))
 pair_set = sort_by_distance(pair_set)
-for i in range (1):
+for i in range (len(pair_set)):
     local_beam_search(pair_set[i])
+    if i!=3:
+        resetmarkpoint(Map)
+    point_selection = []
+    pattern_position+=1
 for i in range(10): #print result
     for j in range(10):
         print(Map[i][j].attribute,end=' ')
