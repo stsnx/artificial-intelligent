@@ -105,8 +105,8 @@ for i in range(10): #set first map
         temp.append(node("-"))
     Map.append(temp)
     
-x= [3,6,3,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
-y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
+x= [3,6,5,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
+y= [7,7,2,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
 
 pair_count = len(x)//2
 point_count = len(x)
