@@ -26,14 +26,15 @@ def sort_by_distance(pair_Set):
                     sorted_pair.insert(j+1, pair_set[i])
     return sorted_pair
 def local_beam_search(pair_):
-    
-    #
     finish = findnodepoint(pair_,pair_[0])
     print("finish "+str(finish))
     print("select "+str(point_selection)) 
     while(not finish):
         temp = point_selection.pop(0)
         finish = findnodepoint(pair_,temp)
+        if point_selection == []:
+            break
+    return finish
         
 def findnodepoint(pair,currentposition):
     print("find"+str( pair[1])+str( currentposition))
@@ -43,8 +44,11 @@ def findnodepoint(pair,currentposition):
         temp_position = currentposition.copy()
         print("currentr"+str(currentposition))
         found = False
+        if Map[temp_position[0]][temp_position[1]+1].visited==True:
+            found = True 
         for i in range(currentposition[1]+1,pair[1][1]):
-            if Map[temp_position[0]][temp_position[1]+1].visited==True :
+            if Map[temp_position[0]][temp_position[1]+1].visited==True and temp_position!=currentposition:
+                
                 if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     found=True
@@ -103,9 +107,17 @@ def findnodepoint(pair,currentposition):
         temp_position = currentposition.copy()
         print("currentl"+str(currentposition))
         found = False
+        if Map[temp_position[0]][temp_position[1]-1].visited==True:
+            found = True 
         for i in range(currentposition[1]-1,pair[1][1],-1):
             print(i)
-            if Map[temp_position[0]][temp_position[1]-1].visited==True :
+            print("now in"+ str(temp_position[0])+ str(temp_position[1]))
+            print("next "+ str(temp_position[0])+ str(temp_position[1]-1)+ " is " + str(Map[temp_position[0]][temp_position[1]-1].attribute)+ str(Map[temp_position[0]][temp_position[1]-1].visited))
+            if Map[temp_position[0]][temp_position[1]-1].visited==True and temp_position!=currentposition:
+                
+                print("now on"+ str(temp_position[0])+ str(temp_position[1]))
+                if not Map[temp_position[0]][temp_position[1]-1].attribute.isalpha() and Map[temp_position[0]][temp_position[1]-1].attribute != '-':
+                    found=True
                 if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     found=True
@@ -114,6 +126,7 @@ def findnodepoint(pair,currentposition):
                     point_selection.append([temp_position[0],temp_position[1]])
                 if Map[temp_position[0]][temp_position[1]].attribute.isalpha() and Map[temp_position[0]][temp_position[1]].attribute==Map[pair[1][0]][pair[1][1]].attribute:
                     found = True
+                
             temp_position[1]-=1
         print("found?  = " + str(found))
         if not found:
@@ -163,8 +176,11 @@ def findnodepoint(pair,currentposition):
         temp_position = currentposition.copy()
         print("currentd"+str(currentposition))
         found = False
+        if Map[temp_position[0]+1][temp_position[1]].visited==True:
+            found = True 
         for i in range(currentposition[0]+1,pair[1][0]):
-            if Map[temp_position[0]+1][temp_position[1]].visited==True:
+            if Map[temp_position[0]+1][temp_position[1]].visited==True and temp_position!=currentposition:
+               
                 Map[temp_position[0]][temp_position[1]].attribute='O'
                 found=True
                 print("will append" +str(temp_position[0])+ str(temp_position[1]) + str(Map[temp_position[0]][temp_position[1]].attribute)+str(Map[temp_position[0]][temp_position[1]].visited))
@@ -219,9 +235,12 @@ def findnodepoint(pair,currentposition):
         temp_position = currentposition.copy()
         print("currentu"+str(currentposition))
         found = False
+        if Map[temp_position[0]-1][temp_position[1]].visited==True:
+            found = True 
         for i in range(currentposition[0]-1,pair[1][0],-1):
             print("b"+str(temp_position))
-            if Map[temp_position[0]-1][temp_position[1]].visited==True:
+            if Map[temp_position[0]-1][temp_position[1]].visited==True and temp_position!=currentposition:
+                
                 if not Map[temp_position[0]][temp_position[1]].attribute.isalpha():
                     Map[temp_position[0]][temp_position[1]].attribute='O'
                     found=True
@@ -284,7 +303,67 @@ def resetmarkpoint(Map):
                 Map[i][j].attribute = "-"
                 Map[i][j].prev = []
                 Map[i][j].visited = False
+def bfs(start,finish,way_pattern): #normal breath first search
     
+    executeCount=0
+    bfs_queue = []
+    bfs_queue.append(start)
+    Map[start[0]][start[1]].visited=True
+    Map[finish[0]][finish[1]].visited=False
+    Map[start[0]][start[1]].prev=[-1,-1]
+    while len(bfs_queue)>0:
+        executeCount+=1
+        
+        temp = bfs_queue.pop(0) #temp is first position in queue for search in bfs
+        Map[temp[0]][temp[1]].visited=True
+        #if wp==2:
+            #print("node"+str(temp)+" prev "+str(Map[temp[0]][temp[1]].prev)+"finish "+str(finish) +" "+ str(Map[finish[0]][finish[1]].visited))
+        if temp[1]<9:
+            if Map[temp[0]][temp[1]+1].visited==False:
+                Map[temp[0]][temp[1]+1].prev = [temp[0],temp[1]]
+                if not Map[temp[0]][temp[1]+1].attribute.isalpha():
+                    bfs_queue.append([temp[0],temp[1]+1])
+                elif temp[0]==finish[0] and temp[1]+1==finish[1]:
+                    bfs_queue.append([temp[0],temp[1]+1])
+        if temp[1]>0:
+            if Map[temp[0]][temp[1]-1].visited==False:
+                Map[temp[0]][temp[1]-1].prev = [temp[0],temp[1]]
+                if not Map[temp[0]][temp[1]-1].attribute.isalpha():
+                    bfs_queue.append([temp[0],temp[1]-1])
+                elif temp[0]==finish[0] and temp[1]-1==finish[1]:
+                    bfs_queue.append([temp[0],temp[1]-1])
+        if temp[0]>0:
+            if Map[temp[0]-1][temp[1]].visited==False :
+                Map[temp[0]-1][temp[1]].prev = [temp[0],temp[1]]
+                if not Map[temp[0]-1][temp[1]].attribute.isalpha():
+                    bfs_queue.append([temp[0]-1,temp[1]])
+                elif temp[0]-1==finish[0] and temp[1]==finish[1]:
+                    bfs_queue.append([temp[0]-1,temp[1]])
+        if temp[0]<9: 
+            if Map[temp[0]+1][temp[1]].visited==False :
+                Map[temp[0]+1][temp[1]].prev = [temp[0],temp[1]] 
+                if not Map[temp[0]+1][temp[1]].attribute.isalpha():
+                    bfs_queue.append([temp[0]+1,temp[1]])
+                elif temp[0]==finish[0] and temp[1]+1==finish[1]:
+                    bfs_queue.append([temp[0]+1,temp[1]])
+        
+        
+        
+        
+        if temp == finish :
+            #print("found")
+            PreviousPoint=Map[temp[0]][temp[1]].prev
+            while PreviousPoint!=start:
+                #print("prevend" + str(Map[PreviousPoint[1]][PreviousPoint[0]].prev))
+                Map[PreviousPoint[0]][PreviousPoint[1]].attribute = line_pattern[way_pattern]
+                PreviousPoint=Map[PreviousPoint[0]][PreviousPoint[1]].prev 
+            #print("end" + str(Map[temp[1]][temp[0]].prev))
+            Map[start[0]][start[1]].visited = True
+            Map[finish[0]][finish[1]].visited = True
+          
+            #print("execcount = "+str(executeCount))
+            return 1
+    return 0   
 
 
 '''print(str(quick_sum_horizontal))
@@ -317,10 +396,14 @@ for i in range(point_count): #mark "x" in map where point exist
         pair_temp=[]
 print(str(pair_set))
 pair_set = sort_by_distance(pair_set)
+
 for i in range (len(pair_set)):
-    local_beam_search(pair_set[i])
-    if i!=3:
+    res = local_beam_search(pair_set[i])
+    if res == False :
         resetmarkpoint(Map)
+        x =bfs(pair_set[i][0],pair_set[i][1],pattern_position)
+    print("res = "+ str(res))
+    resetmarkpoint(Map)
     point_selection = []
     pattern_position+=1
 for i in range(10): #print result
