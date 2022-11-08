@@ -74,9 +74,10 @@ def findnodepoint(pair,currentposition):
                 finalposition = temp_position.copy()
              #   print("final"+ str(finalposition))
                 path = []
-                
+                path.append(Map[finalposition[0]][finalposition[1]].attribute)
                 while(finalposition!=[-1,-1]):
-                    path.append(finalposition)
+                    if finalposition != path[len(path)-1]:
+                        path.append(finalposition)
                     if Map[finalposition[0]][finalposition[1]].attribute == 'O':
                         Map[finalposition[0]][finalposition[1]].attribute = line_pattern[pattern_position]
                         path.append(finalposition)
@@ -85,17 +86,20 @@ def findnodepoint(pair,currentposition):
                     if postfinalposition[0]==finalposition[0]:
                  #       print('samey')
                         if postfinalposition[1]>finalposition[1]:
-                            for i in range (finalposition[1]+1,postfinalposition[1]):
-                                Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
-                                Map[finalposition[0]][i].visited = True
-                                resposition = [finalposition[0],i]
-                                path.append(resposition)
-                        else :
                             for i in range (postfinalposition[1]+1,finalposition[1]):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
+                               
+                        else :
+                            for i in range (finalposition[1]-1,postfinalposition[1],-1):
+                                Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
+                                Map[finalposition[0]][i].visited = True
+                                resposition = [finalposition[0],i]
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     if postfinalposition[1]==finalposition[1]:
                      #   print('samex')
                         if postfinalposition[0]>finalposition[0]:
@@ -103,15 +107,18 @@ def findnodepoint(pair,currentposition):
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                                 resposition = [i,finalposition[1]]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                         else :
-                            for i in range (postfinalposition[0]+1,finalposition[0]):
+                            for i in range (finalposition[0]-1,postfinalposition[0],-1):
                        #         print(str("chevk")+str(i) + str(line_pattern[pattern_position]))
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                                 resposition = [i,finalposition[1]]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     finalposition = postfinalposition
+                
                 line_path.append(path)
                 return True
             else:
@@ -157,8 +164,10 @@ def findnodepoint(pair,currentposition):
                 finalposition = temp_position.copy()
             #    print("final"+ str(finalposition))
                 path = []
+                path.append(Map[finalposition[0]][finalposition[1]].attribute)
                 while(finalposition!=[-1,-1]):
-                    path.append(finalposition)
+                    if finalposition != path[len(path)-1]:
+                        path.append(finalposition)
                     if Map[finalposition[0]][finalposition[1]].attribute == 'O':
                         Map[finalposition[0]][finalposition[1]].attribute = line_pattern[pattern_position]
                     postfinalposition = Map[finalposition[0]][finalposition[1]].prev.copy()
@@ -170,27 +179,31 @@ def findnodepoint(pair,currentposition):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                         else :
-                            for i in range (postfinalposition[1]+1,finalposition[1]):
+                            for i in range (finalposition[1]-1,postfinalposition[1],-1):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     if postfinalposition[1]==finalposition[1]:
             #            print('samex')
                         if postfinalposition[0]>finalposition[0]:
-                            for i in range (finalposition[0]+1,postfinalposition[0]):
-                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
-                                Map[i][finalposition[1]].visited = True
-                                resposition = [i,finalposition[1]]
-                                path.append(resposition)
-                        else :
                             for i in range (postfinalposition[0]+1,finalposition[0]):
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                                 resposition = [i,finalposition[1]]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
+                        else :
+                            for i in range (finalposition[0]-1,postfinalposition[0],-1):
+                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
+                                Map[i][finalposition[1]].visited = True
+                                resposition = [i,finalposition[1]]
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     finalposition = postfinalposition
                 line_path.append(path)
                 return True
@@ -227,8 +240,10 @@ def findnodepoint(pair,currentposition):
                 finalposition = temp_position.copy()
     #            print("final"+ str(finalposition))
                 path = []
+                path.append(Map[finalposition[0]][finalposition[1]].attribute)
                 while(finalposition!=[-1,-1]):
-                    path.append(finalposition)
+                    if finalposition != path[len(path)-1]:
+                        path.append(finalposition)
                     if Map[finalposition[0]][finalposition[1]].attribute == 'O':
                         Map[finalposition[0]][finalposition[1]].attribute = line_pattern[pattern_position]
                     postfinalposition = Map[finalposition[0]][finalposition[1]].prev.copy()
@@ -240,27 +255,31 @@ def findnodepoint(pair,currentposition):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                         else :
-                            for i in range (postfinalposition[1]+1,finalposition[1]):
+                            for i in range (finalposition[1]-1,postfinalposition[1],-1):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     if postfinalposition[1]==finalposition[1]:
     #                    print('samex')
                         if postfinalposition[0]>finalposition[0]:
-                            for i in range (finalposition[0]+1,postfinalposition[0]):
-                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
-                                Map[i][finalposition[1]].visited = True
-                                resposition = [i,finalposition[1]]
-                                path.append(resposition)
-                        else :
                             for i in range (postfinalposition[0]+1,finalposition[0]):
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                                 resposition = [i,finalposition[1]]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
+                        else :
+                            for i in range (finalposition[0]-1,postfinalposition[0],-1):
+                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
+                                Map[i][finalposition[1]].visited = True
+                                resposition = [i,finalposition[1]]
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     finalposition = postfinalposition
                 line_path.append(path)
                 return True
@@ -300,8 +319,10 @@ def findnodepoint(pair,currentposition):
                 finalposition = temp_position.copy()
     #            print("final"+ str(finalposition))
                 path = []
+                path.append(Map[finalposition[0]][finalposition[1]].attribute)
                 while(finalposition!=[-1,-1]):
-                    path.append(finalposition)
+                    if finalposition != path[len(path)-1]:
+                        path.append(finalposition)
                     if Map[finalposition[0]][finalposition[1]].attribute == 'O':
                         Map[finalposition[0]][finalposition[1]].attribute = line_pattern[pattern_position]
                     postfinalposition = Map[finalposition[0]][finalposition[1]].prev.copy()
@@ -313,27 +334,31 @@ def findnodepoint(pair,currentposition):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                         else :
-                            for i in range (postfinalposition[1]+1,finalposition[1]):
+                            for i in range (finalposition[1]-1,postfinalposition[1],-1):
                                 Map[finalposition[0]][i].attribute = line_pattern[pattern_position]
                                 Map[finalposition[0]][i].visited = True
                                 resposition = [finalposition[0],i]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     if postfinalposition[1]==finalposition[1]:
     #                    print('samex')
                         if postfinalposition[0]>finalposition[0]:
-                            for i in range (finalposition[0]+1,postfinalposition[0]):
-                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
-                                Map[i][finalposition[1]].visited = True
-                                resposition = [i,finalposition[1]]
-                                path.append(resposition)
-                        else :
                             for i in range (postfinalposition[0]+1,finalposition[0]):
                                 Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
                                 Map[i][finalposition[1]].visited = True
                                 resposition = [i,finalposition[1]]
-                                path.append(resposition)
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
+                        else :
+                            for i in range (finalposition[0]-1,postfinalposition[0],-1):
+                                Map[i][finalposition[1]].attribute = line_pattern[pattern_position]
+                                Map[i][finalposition[1]].visited = True
+                                resposition = [i,finalposition[1]]
+                                if resposition != path[len(path)-1]:
+                                    path.append(resposition)
                     finalposition = postfinalposition
                 line_path.append(path)
                 return True
@@ -403,6 +428,7 @@ def bfs(start,finish,way_pattern): #normal breath first search
         path = []
         if temp == finish :
             #print("found")
+            path.append(Map[finish[0]][finish[1]].attribute)
             path.append(finish)
             PreviousPoint=Map[temp[0]][temp[1]].prev
             while PreviousPoint!=start:
@@ -430,8 +456,8 @@ def bfs(start,finish,way_pattern): #normal breath first search
 
 #x= [6,3,3,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
 #y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
-x=[6,3,5,0,5,7,2,5]
-y=[7,7,2,6,0,6,0,5]
+x= [8,3,5,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
+y= [7,9,2,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
 for i in range(10): #set first map
     temp = []
     for j in range(10):
@@ -467,7 +493,9 @@ for i in range(10): #print result
     for j in range(10):
         print(Map[i][j].attribute,end=' ')
     print()
+line_path.sort(key=lambda line_path: line_path[0])
 for i in range(len(pair_set)):
+    line_path[i].pop(0)
     print("path "+chr(65+i)+ " : "+str(line_path[i]))
 print("Searched time used {} millisecond".format(end_time-start_time))
 memUsed  = list(tracemalloc .get_traced_memory())
