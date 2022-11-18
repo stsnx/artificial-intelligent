@@ -34,30 +34,38 @@ def bfs(start,finish,way_pattern): #normal breath first search
             if Map[temp[0]][temp[1]+1].visited==False:
                 Map[temp[0]][temp[1]+1].prev = [temp[0],temp[1]]
                 if not Map[temp[0]][temp[1]+1].attribute.isalpha():
-                    bfs_queue.append([temp[0],temp[1]+1])
+                    if finish[1]>= temp[1]:
+                        bfs_queue.append([temp[0],temp[1]+1])
                 elif temp[0]==finish[0] and temp[1]+1==finish[1]:
-                    bfs_queue.append([temp[0],temp[1]+1])
+                    if finish[1]>= temp[1]:
+                        bfs_queue.append([temp[0],temp[1]+1])
         if temp[1]>0:
             if Map[temp[0]][temp[1]-1].visited==False:
                 Map[temp[0]][temp[1]-1].prev = [temp[0],temp[1]]
                 if not Map[temp[0]][temp[1]-1].attribute.isalpha():
-                    bfs_queue.append([temp[0],temp[1]-1])
+                    if finish[1]<= temp[1]:
+                        bfs_queue.append([temp[0],temp[1]-1])
                 elif temp[0]==finish[0] and temp[1]-1==finish[1]:
-                    bfs_queue.append([temp[0],temp[1]-1])
+                    if finish[1]<= temp[1]:
+                        bfs_queue.append([temp[0],temp[1]-1])
         if temp[0]>0:
             if Map[temp[0]-1][temp[1]].visited==False :
                 Map[temp[0]-1][temp[1]].prev = [temp[0],temp[1]]
                 if not Map[temp[0]-1][temp[1]].attribute.isalpha():
-                    bfs_queue.append([temp[0]-1,temp[1]])
+                    if finish[0]<= temp[0]:
+                        bfs_queue.append([temp[0]-1,temp[1]])
                 elif temp[0]-1==finish[0] and temp[1]==finish[1]:
-                    bfs_queue.append([temp[0]-1,temp[1]])
+                    if finish[0]<= temp[0]:
+                        bfs_queue.append([temp[0]-1,temp[1]])
         if temp[0]<9: 
             if Map[temp[0]+1][temp[1]].visited==False :
                 Map[temp[0]+1][temp[1]].prev = [temp[0],temp[1]] 
                 if not Map[temp[0]+1][temp[1]].attribute.isalpha():
-                    bfs_queue.append([temp[0]+1,temp[1]])
+                    if finish[0]>= temp[0]:
+                        bfs_queue.append([temp[0]+1,temp[1]])
                 elif temp[0]+1==finish[0] and temp[1]==finish[1]:
-                    bfs_queue.append([temp[0]+1,temp[1]])
+                    if finish[0]>= temp[0]:
+                        bfs_queue.append([temp[0]+1,temp[1]])
         
         
         
@@ -105,10 +113,11 @@ for i in range(10): #set first map
         temp.append(node("-"))
     Map.append(temp)
     
-#x= [8,3,5,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
-#y= [7,9,2,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
+#x= [3,6,5,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
+#y= [7,7,2,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
 y = [0,5,1,7,3,4,4,8]
 x = [9,0,3,2,3,7,8,7]
+
 pair_count = len(x)//2
 point_count = len(x)
 Map_Marker = 'A'

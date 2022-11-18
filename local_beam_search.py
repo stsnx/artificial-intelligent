@@ -24,23 +24,34 @@ def sort_by_distance(pair_Set):
     for i in range (1,len(pair_Set)):
         new_distance = abs(pair_Set[i][0][0]-pair_Set[i][1][0])+abs(pair_Set[i][0][1]-pair_Set[i][1][1])
         pair_set[i].append(new_distance)
+        
         if new_distance >= current_distance:
             sorted_pair.append(pair_set[i])
             current_distance = new_distance
         else :
             for j in range (len(sorted_pair)-1,-1,-1):
-                if sorted_pair[j][2] < new_distance :
+                if sorted_pair[j][2] <= new_distance :
                     sorted_pair.insert(j+1, pair_set[i])
+            if(len(sorted_pair)<=i):
+                sorted_pair.insert(0, pair_set[i])
+        print(str(sorted_pair))
     return sorted_pair
 def local_beam_search(pair_):
     finish = findnodepoint(pair_,pair_[0])
     #print("finish "+str(finish))
     #print("select "+str(point_selection)) 
+    timeout = 0
     while(not finish):
-        temp = point_selection.pop(0)
-        finish = findnodepoint(pair_,temp)
+        if len(point_selection)>0:
+            temp = point_selection.pop(0)
+            print("wait" + str(temp))
+            finish = findnodepoint(pair_,temp)
+        timeout+=1
         if point_selection == []:
-            break
+            return finish
+        if timeout>5:
+            point_selection = []
+            return False
     return finish
         
 def findnodepoint(pair,currentposition):
@@ -454,10 +465,10 @@ def bfs(start,finish,way_pattern): #normal breath first search
                     return True
 '''
 
-#x= [6,3,3,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
-#y= [7,7,0,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
 x= [8,3,5,0,5,7,2,5] # position of point in x-axis (point x[0] is paired of poit x[1])
 y= [7,9,2,6,0,6,0,5] # position of point in y-axis (point y[0] is paired of poit y[1])
+
+
 for i in range(10): #set first map
     temp = []
     for j in range(10):
@@ -478,8 +489,9 @@ print(str(pair_set))
 start_time = int(round(time.time()*1000))
 tracemalloc.start()
 pair_set = sort_by_distance(pair_set)
-
+print(str(pair_set))
 for i in range (len(pair_set)):
+    print(str(pair_set[i]))
     res = local_beam_search(pair_set[i])
     if res == False :
         resetmarkpoint(Map)
